@@ -1,0 +1,29 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/jammy64"
+
+  config.vm.define "Jenkins" do |jenkins|
+    jenkins.vm.hostname = "jenkins"
+    jenkins.vm.network "private_network", ip: "192.168.11.1"
+    jenkins.vm.provider "virtualbox" do |vb|
+        vb.name = "Jenkins"
+        vb.gui = false
+        vb.memory = "2048"
+        vb.cpus = 2
+    end
+    jenkins.vm.provision "shell", 
+        path: "scripts/jenkins_provision.sh"
+  end
+
+  config.vm.define "Jenkins_worker" do |jenkins|
+    jenkins.vm.hostname = "jenkinsWorker"
+    jenkins.vm.network "private_network", ip: "192.168.11.2"
+    jenkins.vm.provider "virtualbox" do |vb|
+        vb.name = "Jenkins_worker"
+        vb.gui = false
+        vb.memory = "2048"
+        vb.cpus = 2
+    end
+    jenkins.vm.provision "shell", 
+        path: "scripts/jenkins_worker_provision.sh"
+  end  
+end
